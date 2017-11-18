@@ -29,8 +29,15 @@ class DbConnector:
 
 	def insertData(self, query, table, inputs):
 		self.cur.execute(query, inputs)
+		self.con.commit()
 		newQuery = "SELECT * FROM " + table
 		return self.getData(newQuery)
+
+	def printData(self, rows, header):
+		print(header)
+		for row in rows:
+			print(row)
+		print("\n")
 
 	def getStudentsCourses(self):
 		query = "SELECT students.first_name, students.last_name, " \
@@ -38,28 +45,22 @@ class DbConnector:
 		"ON students.id = student_courses.student_id) INNER JOIN courses " \
 		"ON student_courses.course_id = courses.id)"
 		rows = self.getData(query)
-		print("FirstName LastName CourseDescrtion")
-		for row in rows:
-			print(row)
-		print("\n") 
+		header = "FirstName LastName CourseDescrtion"
+		self.printData(rows, header) 
 
 	def getStudentsTeachers(self):
 		query = "SELECT students.first_name, teachers.Name " \
 		"FROM students INNER JOIN teachers ON " \
 		"students.teacher_id = teachers.id"
 		rows = self.getData(query)
-		print("StudentFirstName TeacherName")
-		for row in rows:
-			print(row)
-		print("\n")
+		header = "StudentFirstName TeacherName"
+		self.printData(rows, header)
 
 	def insertStudent(self, inputs):
 		query = "INSERT INTO students VALUES(?, ?, ?, ?, ?)"
 		rows = self.insertData(query, "students", inputs)
-		print("ID FirstName LastName DateBirthDay TeacherId")
-		for row in rows:
-			print(row)
-		print("\n")
+		header = "ID FirstName LastName DateBirthDay TeacherId"
+		self.printData(rows, header)
 
 
 if __name__ == '__main__':
